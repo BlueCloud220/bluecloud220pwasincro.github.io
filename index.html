@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es" class="light dark">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sincronización - PWA SynCloud</title>
+
+    <script src="js/registraServiceWorker.js"></script>
+
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#4caf50" />
+    <link rel="icon" sizes="32x32" href="favicon.ico" />
+    <link rel="manifest" href="site.webmanifest" />
+    <script src="ungap/custom-elements.js"></script>
+
+    <script type="module" src="js/configura.js"></script>
+    <link rel="stylesheet" href="css/estilos.css" />
+    <link rel="stylesheet" href="css/transicion_pestanas.css" />
+
+    <script type="module" src="lib/js/muestraError.js"></script>
+    <script type="module" src="js/bd/categoriaConsultaNoEliminados.js"></script>
+    <script type="module" src="js/renderiza.js"></script>
+    <script type="module" src="js/sincroniza.js"></script>
+    <script type="module" src="js/esperaUnPocoYSincroniza.js"></script>
+  </head>
+
+  <body
+    onload="categoriaConsultaNoEliminados()
+  .then(categorias => {
+   renderiza(lista, categorias)
+   sincroniza(lista)
+  })
+  .catch(error => {
+   muestraError(error)
+   esperaUnPocoYSincroniza(lista)
+  })"
+  >
+    <md-top-app-bar adicional="tab" style="text-align: center">
+      <h1>Sincronización - PWA SynCloud</h1>
+    </md-top-app-bar>
+
+    <nav-tab-fixed id="tab"></nav-tab-fixed>
+
+    <main>
+      <ul class="md-list" id="lista">
+        <li class="md-two-line">
+          <progress max="100">Cargando…</progress>
+        </li>
+      </ul>
+
+      <a
+        type="button"
+        class="md-fab-primary"
+        href="agrega.html"
+        style="
+          position: fixed;
+          bottom: 1rem;
+          right: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <span class="material-symbols-outlined">add</span>
+      </a>
+    </main>
+  </body>
+</html>

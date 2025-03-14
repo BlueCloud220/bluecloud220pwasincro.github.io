@@ -1,0 +1,13 @@
+AddType application/manifest+json .webmanifest
+AddType application/javascript .js
+
+ExpiresActive On
+
+Header set Cache-Control "max-age=1, must-revalidate"
+
+RewriteEngine On
+
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:CF-Visitor} !{"scheme":"https"}
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es" class="light dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Modificar Categoría - PWA SynCloud</title>
+
+  <script src="js/registraServiceWorker.js"></script>
+
+  <meta name="viewport" content="width=device-width" />
+  <meta name="theme-color" content="#4caf50" />
+  <link rel="icon" sizes="32x32" href="favicon.ico" />
+  <link rel="manifest" href="site.webmanifest" />
+  <script src="ungap/custom-elements.js"></script>
+
+  <script type="module" src="js/configura.js"></script>
+  <link rel="stylesheet" href="css/estilos.css" />
+  <link rel="stylesheet" href="css/transicion_pestanas.css" />
+
+  <script type="module" src="lib/js/muestraError.js"></script>
+  <script type="module" src="lib/js/muestraObjeto.js"></script>
+  <script type="module" src="js/bd/categoriaBusca.js"></script>
+  <script type="module" src="js/bd/categoriaElimina.js"></script>
+  <script type="module" src="js/bd/categoriaModifica.js"></script>
+
+  <script>
+    // Obtiene los parámetros de la página.
+    const parametros = new URL(location.href).searchParams;
+
+    const paramId = parametros.get("id");
+  </script>
+</head>
+
+<body onload="if (paramId !== null) {
+   categoriaBusca(paramId)
+    .then(categoria => {
+     if (categoria === undefined) throw new Error('Categoría no encontrada.')
+     muestraObjeto(forma, { 
+      nombre: { value: categoria.CAT_NOMBRE },
+      descripcion: { value: categoria.CAT_DESCRIPCION }
+      })
+      // Establecemos el valor de 'estado' en los radio buttons
+      const estado = categoria.CAT_ESTADO; // Habilitado o Deshabilitado
+      if (estado === 'Habilitado') {
+        document.getElementById('option1').checked = true;
+      } else if (estado === 'Deshabilitado') {
+        document.getElementById('option2').checked = true;
+      }
+    })
+    .catch(muestraError)
+  }">
+
+  <form id="forma" onsubmit="
+   event.preventDefault()
+   if (paramId !== null) {
+    const CAT_ID = paramId
+    // Lee el nombre, quitándole los espacios al inicio y al final.
+    const CAT_NOMBRE = forma.nombre.value.trim()
+    const CAT_DESCRIPCION = forma.descripcion.value.trim()
+    const CAT_ESTADO = forma.estado.value.trim()
+    const modelo = { CAT_ID, CAT_NOMBRE, CAT_DESCRIPCION, CAT_ESTADO }
+    categoriaModifica(modelo)
+     .then(json => location.href = 'index.html')
+     .catch(muestraError)
+   }">
+
+    <md-top-app-bar class="medium" headline="h1Headline">
+      <h1>Modificar Categoría - PWA SynCloud</h1>
+
+      <a type="button" class="md-standard-icon-button" title="Cancelar" slot="navigation" href="index.html">
+        <span class="material-symbols-outlined">close</span>
+      </a>
+
+      <button type="submit" class="md-standard-icon-button" title="Modificar" slot="action">
+        <span class="material-symbols-outlined">save</span>
+      </button>
+
+      <button is="md-overflow-button" slot="action" onclick="overflow.alterna(this)"></button>
+    </md-top-app-bar>
+
+    <md-overflow-menu id="overflow">
+      <button type="button" onclick="
+          if (paramId !== null && confirm('Confirma la eliminación')) {
+            categoriaElimina(paramId)
+            .then(() => location.href = 'index.html')
+            .catch(muestraError)
+          }">
+        <span class="material-symbols-outlined"> delete_forever</span>
+        Eliminar
+      </button>
+    </md-overflow-menu>
+
+    <nav-tab-fixed id="tab"></nav-tab-fixed>
+
+    <main>
+      <h1 id="h1Headline">Modificar</h1>
+
+      <p style="display: none">
+        <label class="md-filled-text-field">
+          <input name="id" type="hidden" />
+          <span>Id *</span>
+          <small>Obligatorio</small>
+        </label>
+      </p>
+
+      <p>
+        <label class="md-filled-text-field">
+          <input name="nombre" value="Cargando…" placeholder="Nombre*" />
+          <span>Nombre *</span>
+          <small>Obligatorio</small>
+        </label>
+      </p>
+
+      <p>
+        <label class="md-filled-text-field">
+          <textarea name="descripcion" value="Cargando…" rows="3" placeholder="Descripción"></textarea>
+          <span>Descripción *</span>
+          <small>Obligatorio</small>
+        </label>
+      </p>
+
+      <p class="md-segmented-button">
+        <input id="option1" type="radio" name="estado" value="Habilitado" />
+        <label for="option1">
+          <span class="material-symbols-outlined">done</span>
+          Habilitado
+        </label>
+        <input id="option2" type="radio" name="estado" value="Deshabilitado" />
+        <label for="option2">
+          <span class="material-symbols-outlined">done</span>
+          Deshabilitado
+        </label>
+      </p>
+    </main>
+  </form>
+</body>
+
+</html>

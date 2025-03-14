@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es" class="light dark">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Nueva Categoría - PWA SynCloud</title>
+
+    <script src="js/registraServiceWorker.js"></script>
+
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#4caf50" />
+    <link rel="icon" sizes="32x32" href="favicon.ico" />
+    <link rel="manifest" href="site.webmanifest" />
+    <script src="ungap/custom-elements.js"></script>
+
+    <script type="module" src="js/configura.js"></script>
+    <link rel="stylesheet" href="css/estilos.css" />
+    <link rel="stylesheet" href="css/transicion_pestanas.css" />
+
+    <script type="module" src="lib/js/muestraError.js"></script>
+    <script type="module" src="js/bd/categoriaAgrega.js"></script>
+  </head>
+
+  <body>
+    <form id="forma" onsubmit="
+    event.preventDefault()
+    // Lee el nombre, quitándole los espacios al inicio y al final.
+    const CAT_NOMBRE = forma.nombre.value.trim()
+    const CAT_DESCRIPCION = forma.descripcion.value.trim()
+    const CAT_ESTADO = forma.estado.value.trim()
+    const modelo = { CAT_NOMBRE, CAT_DESCRIPCION, CAT_ESTADO }
+    categoriaAgrega(modelo)
+     .then(json => location.href = 'index.html')
+     .catch(muestraError)">
+      <md-top-app-bar class="center-aligned" headline="h1Headline">
+        <h1>Nueva Categoría - PWA SynCloud</h1>
+
+        <a
+          type="button"
+          class="md-standard-icon-button"
+          title="Cancelar"
+          slot="navigation"
+          href="index.html"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </a>
+
+        <button
+          type="submit"
+          class="md-standard-icon-button"
+          title="Agregar"
+          slot="action"
+        >
+          <span class="material-symbols-outlined">save</span>
+        </button>
+
+      </md-top-app-bar>
+
+      <nav-tab-fixed id="tab"></nav-tab-fixed>
+
+      <main>
+        <p><h1 id="h1Headline">Nuevo</h1></p>
+
+        <p>
+          <label class="md-filled-text-field">
+            <input name="nombre" autofocus placeholder="Nombre*" />
+            <span>Nombre *</span>
+            <small>Obligatorio</small>
+          </label>
+        </p>
+
+        <p>
+          <label class="md-filled-text-field">
+            <textarea
+              name="descripcion"
+              rows="3"
+              placeholder="Descripción"
+            ></textarea>
+            <span>Descripción *</span>
+            <small>Obligatorio</small>
+          </label>
+        </p>
+
+        <p class="md-segmented-button">
+          <input id="option1" type="radio" name="estado" checked value="Habilitado" />
+          <label for="option1">
+            <span class="material-symbols-outlined">done</span>
+            Habilitado
+          </label>
+          <input id="option2" type="radio" name="estado" value="Deshabilitado" />
+          <label for="option2">
+            <span class="material-symbols-outlined">done</span>
+            Deshabilitado
+          </label>
+        </p>
+      </main>
+    </form>
+  </body>
+</html>
